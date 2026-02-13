@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import (
     QWidget, QLabel, QPushButton, QVBoxLayout, 
     QScrollArea, QTextEdit
 )
-from win2 import TestWin
+from win2_1 import TestWin
 
 main_text = 'Тестирование "Списки и кортежи в Python"'
 win_x, win_y = 200, 100
