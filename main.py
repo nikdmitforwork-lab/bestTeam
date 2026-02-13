@@ -1,91 +1,87 @@
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QFont, QDoubleValidator, QIntValidator
 from PyQt5.QtWidgets import (
-       QApplication, QWidget,
-       QHBoxLayout, QVBoxLayout,
-       QGroupBox, QRadioButton,
-       QPushButton, QLabel, QListWidget, QLineEdit)
+    QApplication, QPushButton, QWidget, QLabel, 
+    QVBoxLayout, QLineEdit, QSpinBox, QHBoxLayout
+)
+from win1 import TheoryWin
 
-from text import *
+# Константы
+main_text = 'Тестирование "Списки и кортежи в Python"'
+instr = 'Перед началом тестирования введите свои данные'
+win_x, win_y = 200, 100
+win_width, win_height = 1000, 600
 
-class FinalWin(QWidget):
-    def __init__(self, exp):
+class MainWin(QWidget):
+    def __init__(self):
         super().__init__()
-        self.exp = exp
-        self.initUI()
         self.set_appear()
+        self.initUI()
+        self.connects()
         self.show()
+
     def set_appear(self):
-        self.setWindowTitle(txt_title)
+        self.setWindowTitle(main_text)
         self.resize(win_width, win_height)
         self.move(win_x, win_y)
+
     def initUI(self):
-        self.work_text = QLabel(txt_workheart + self.results())
-        self.index_text = QLabel(txt_index + str(self.index))
-        self.layout_line = QVBoxLayout()
-        self.layout_line.addWidget(self.work_text, alignment = Qt.AlignCenter)
-        self.layout_line.addWidget(self.index_text, alignment = Qt.AlignCenter)
-        self.setLayout(self.layout_line)
-    def results(self):
-        if self.exp.age < 7:
-            self.index = 0
-            return "Нет данных"
-        self.index = (4 * (int(self.exp.test1) + int(self.exp.test2) + int(self.exp.test3)) - 200) / 10
-        if self.exp.age == 7 or self.exp.age == 8:
-            if self.index >= 21:
-                return txt_res1
-            elif self.index <  21 and self.index >= 17:
-                return txt_res2
-            elif self.index <  17 and self.index >= 12:
-                return txt_res3
-            elif self.index <  12 and self.index >= 6.5:
-                return txt_res4
-            else:
-                return txt_res5
-        if self.exp.age == 9 or self.exp.age == 10:
-            if self.index >= 19.5:
-                return txt_res1
-            elif self.index < 19.5 and self.index >= 15.5:
-                return txt_res2
-            elif self.index < 15.5 and self.index >= 10.5:
-                return txt_res3
-            elif self.index < 10.5 and self.index >= 5:
-                return txt_res4
-            else:
-                return txt_res5
-        if self.exp.age == 11 or self.exp.age == 12:
-            if self.index >= 18:
-                return txt_res1
-            elif self.index < 18 and self.index >= 14:
-                return txt_res2
-            elif self.index < 14 and self.index >= 9:
-                return txt_res3
-            elif self.index < 9 and self.index >= 3.5:
-                return txt_res4
-            else:
-                return txt_res5
-        if self.exp.age == 13 or self.exp.age == 14:
-            if self.index >= 16.5:
-                return txt_res1
-            elif self.index < 16.5 and self.index >= 12.5:
-                return txt_res2
-            elif self.index < 12.5 and self.index >= 7.5:
-                return txt_res3
-            elif self.index < 7.5 and self.index >= 2:
-                return txt_res4
-            else:
-                return txt_res5
-        if self.exp.age >= 15:
-            if self.index >= 15:
-                return txt_res1
-            elif self.index < 15 and self.index >= 11:
-                return txt_res2
-            elif self.index < 11 and self.index >= 6:
-                return txt_res3
-            elif self.index < 6 and self.index >= 0.5:
-                return txt_res4
-            else:
-                return txt_res5
+        self.instruction = QLabel(instr)
+        self.instruction.setAlignment(Qt.AlignCenter)
+        self.instruction.setStyleSheet("font-size: 16px; font-weight: bold; margin: 20px;")
+        
+        # ФИО
+        self.lfio = QLabel("Ваше ФИО:")
+        self.fio = QLineEdit()
+        self.fio.setPlaceholderText("Введите фамилию, имя, отчество")
+        
+        # Возраст
+        self.lage = QLabel("Ваш возраст:")
+        self.age = QSpinBox()
+        self.age.setRange(10, 100)
+        self.age.setValue(18)
+        
+        # Кнопка
+        self.button = QPushButton('Перейти к теории')
+        self.button.setMinimumHeight(40)
+        
+        # Макет
+        layout = QVBoxLayout()
+        layout.addWidget(self.instruction)
+        
+        # ФИО
+        fio_layout = QHBoxLayout()
+        fio_layout.addWidget(self.lfio)
+        fio_layout.addWidget(self.fio)
+        layout.addLayout(fio_layout)
+        
+        # Возраст
+        age_layout = QHBoxLayout()
+        age_layout.addWidget(self.lage)
+        age_layout.addWidget(self.age)
+        layout.addLayout(age_layout)
+        
+        layout.addStretch()
+        layout.addWidget(self.button, alignment=Qt.AlignCenter)
+        layout.addStretch()
+        
+        self.setLayout(layout)
 
+    def connects(self):
+        self.button.clicked.connect(self.next_click)
 
-app = QApplication([])
+    def next_click(self):
+        fio = self.fio.text().strip()
+        age = self.age.value()
+        
+        if fio and len(fio) > 2:
+            self.hide()
+            self.tw = TheoryWin(fio, age)
+            self.tw.show()
+        else:
+            self.fio.setStyleSheet("border: 2px solid red;")
+            self.lfio.setText("Ваше ФИО (обязательно!):")
+
+if __name__ == "__main__":
+    app = QApplication([])
+    mw = MainWin()
+    app.exec_()
