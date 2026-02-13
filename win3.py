@@ -14,7 +14,7 @@ from PyQt5.QtWidgets import (
 import json
 import os
 from datetime import datetime
-from win2 import QUESTIONS
+from win2_1 import QUESTIONS
 
 # Глобальная переменная для истории всех попыток
 ALL_RESULTS = []
