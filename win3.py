@@ -229,7 +229,7 @@ class ResultWin(QWidget):
             return "Нужно больше практики! Рекомендуется внимательно изучить теорию и выполнить практические задания."
 
     def restart_test(self):
-        from win2 import TestWin
+        from win2_1 import TestWin
         self.hide()
         self.new_test = TestWin(self.fio, self.age)
         self.new_test.show()
